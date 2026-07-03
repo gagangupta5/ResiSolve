@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth, useToast } from '../App';
+import { API_URL, BASE_URL } from '../config';
 
 export default function ResidentDashboard() {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ export default function ResidentDashboard() {
   const fetchMyComplaints = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/complaints', {
+      const response = await fetch(`${API_URL}/complaints`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       const data = await response.json();
@@ -87,7 +88,7 @@ export default function ResidentDashboard() {
         formData.append('photo', photo);
       }
 
-      const response = await fetch('http://localhost:5000/api/complaints', {
+      const response = await fetch(`${API_URL}/complaints`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${user.token}` },
         body: formData
@@ -115,7 +116,7 @@ export default function ResidentDashboard() {
 
   const handleOpenComplaint = async (complaintId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/complaints/${complaintId}`, {
+      const response = await fetch(`${API_URL}/complaints/${complaintId}`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       const data = await response.json();
@@ -284,9 +285,9 @@ export default function ResidentDashboard() {
 
                 <div>
                   {selectedComplaint.photoUrl ? (
-                    <div style={{ cursor: 'zoom-in' }} onClick={() => setLightboxImage(`http://localhost:5000/${selectedComplaint.photoUrl}`)}>
+                    <div style={{ cursor: 'zoom-in' }} onClick={() => setLightboxImage(`${BASE_URL}/${selectedComplaint.photoUrl}`)}>
                       <img 
-                        src={`http://localhost:5000/${selectedComplaint.photoUrl}`} 
+                        src={`${BASE_URL}/${selectedComplaint.photoUrl}`} 
                         alt={selectedComplaint.title}
                         style={{ width: '100%', height: '130px', objectFit: 'cover', borderRadius: 'var(--border-radius-md)', border: '1px solid var(--border-color)' }}
                       />
