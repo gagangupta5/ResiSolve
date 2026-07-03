@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth, useToast } from '../App';
+import { API_URL } from '../config';
 
 export default function NoticeBoard() {
   const { user } = useAuth();
@@ -19,7 +20,7 @@ export default function NoticeBoard() {
   const fetchNotices = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/notices', {
+      const response = await fetch(`${API_URL}/notices`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       const data = await response.json();
@@ -48,7 +49,7 @@ export default function NoticeBoard() {
 
     setSubmitting(true);
     try {
-      const response = await fetch('http://localhost:5000/api/notices', {
+      const response = await fetch(`${API_URL}/notices`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +85,7 @@ export default function NoticeBoard() {
     if (!window.confirm('Are you sure you want to delete this notice?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/notices/${noticeId}`, {
+      const response = await fetch(`${API_URL}/notices/${noticeId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${user.token}` }
       });

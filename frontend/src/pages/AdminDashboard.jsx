@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth, useToast } from '../App';
+import { API_URL, BASE_URL } from '../config';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -32,7 +33,7 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/complaints/stats', {
+      const response = await fetch(`${API_URL}/complaints/stats`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       const data = await response.json();
@@ -56,7 +57,7 @@ export default function AdminDashboard() {
       if (startDate) params.append('startDate', startDate);
       if (endDate) params.append('endDate', endDate);
 
-      const response = await fetch(`http://localhost:5000/api/complaints?${params.toString()}`, {
+      const response = await fetch(`${API_URL}/complaints?${params.toString()}`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       const data = await response.json();
@@ -80,7 +81,7 @@ export default function AdminDashboard() {
 
   const handleExport = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/complaints/export', {
+      const response = await fetch(`${API_URL}/complaints/export`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       if (!response.ok) throw new Error();
@@ -100,7 +101,7 @@ export default function AdminDashboard() {
 
   const handleOpenComplaint = async (complaintId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/complaints/${complaintId}`, {
+      const response = await fetch(`${API_URL}/complaints/${complaintId}`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       const data = await response.json();
@@ -125,7 +126,7 @@ export default function AdminDashboard() {
 
       // Update status if it changed and complaint is not already Resolved
       if (updateStatus !== selectedComplaint.status && selectedComplaint.status !== 'Resolved') {
-        const res = await fetch(`http://localhost:5000/api/complaints/${selectedComplaint._id}/status`, {
+        const res = await fetch(`${API_URL}/complaints/${selectedComplaint._id}/status`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -142,7 +143,7 @@ export default function AdminDashboard() {
 
       // Update priority if it changed
       if (updatePriority !== selectedComplaint.priority && isSuccess) {
-        const res = await fetch(`http://localhost:5000/api/complaints/${selectedComplaint._id}/priority`, {
+        const res = await fetch(`${API_URL}/complaints/${selectedComplaint._id}/priority`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -360,9 +361,9 @@ export default function AdminDashboard() {
 
                   <div>
                     {selectedComplaint.photoUrl ? (
-                      <div style={{ cursor: 'zoom-in' }} onClick={() => setLightboxImage(`http://localhost:5000/${selectedComplaint.photoUrl}`)}>
+                      <div style={{ cursor: 'zoom-in' }} onClick={() => setLightboxImage(`${BASE_URL}/${selectedComplaint.photoUrl}`)}>
                         <img 
-                          src={`http://localhost:5000/${selectedComplaint.photoUrl}`} 
+                          src={`${BASE_URL}/${selectedComplaint.photoUrl}`} 
                           alt={selectedComplaint.title}
                           style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: 'var(--border-radius-md)', border: '1px solid var(--border-color)' }}
                         />

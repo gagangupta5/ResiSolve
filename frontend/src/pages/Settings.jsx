@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth, useToast } from '../App';
+import { API_URL } from '../config';
 
 export default function Settings() {
   const { user } = useAuth();
@@ -13,7 +14,7 @@ export default function Settings() {
     if (user.role !== 'admin') return;
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/settings', {
+      const response = await fetch(`${API_URL}/settings`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       const data = await response.json();
@@ -35,7 +36,7 @@ export default function Settings() {
     e.preventDefault();
     setSaving(true);
     try {
-      const response = await fetch('http://localhost:5000/api/settings', {
+      const response = await fetch(`${API_URL}/settings`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
