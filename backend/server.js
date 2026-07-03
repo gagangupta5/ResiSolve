@@ -49,10 +49,21 @@ app.use('/api/complaints', complaintRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/settings', settingsRoutes);
 
-// Catch-all route for unmatched endpoints
-app.use('*', (req, res, next) => {
-  res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found` });
-});
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+  const frontendDist = path.join(__dirname, '../frontend/dist');
+  app.use(express.static(frontendDist));
+  
+  // Direct any non-API/non-upload request to React's index.html for client-side routing
+  app.get(/^\/(?!api|uploads).*/, (req, res) => {
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+} else {
+  // Catch-all route for unmatched endpoints (in dev mode)
+  app.use('*', (req, res, next) => {
+    res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found` });
+  });
+}
 
 // Centralized error handler
 app.use(errorHandler);
